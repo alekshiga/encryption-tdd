@@ -12,17 +12,18 @@ class TestEncryption(unittest.TestCase):
         encryption = Encryption()
         self.assertIsNotNone(encryption)
 
-    def test_caesar_single_letter_encryption(self):
+    def test_encryption(self):
         encryption = Encryption()
-        result = encryption.encrypt('a', 3)
+        result = encryption.encrypt('aaaa', 3)
+        # Сейчас используется шифр Цезаря, обычный сдвиг
         # 1 - a, 2 - b, 3 - c, 4 - d
-        self.assertEqual(result, 'd')
+        self.assertEqual(result, 'dddd')
 
-    def test_decryption_single_letter(self):
+    def test_decryption(self):
         encryption = Encryption()
-        encrypted = encryption.encrypt("HELLO", 3)
+        encrypted = encryption.encrypt("h", 3)
         decrypted = encryption.decrypt(encrypted, 3)
-        self.assertEqual(decrypted, "HELLO")
+        self.assertEqual(decrypted, "h")
 
 if __name__ == '__main__':
     unittest.main()
