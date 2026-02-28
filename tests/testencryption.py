@@ -18,5 +18,11 @@ class TestEncryption(unittest.TestCase):
         # 1 - a, 2 - b, 3 - c, 4 - d
         self.assertEqual(result, 'd')
 
+    def test_decryption_single_letter(self):
+        encryption = Encryption()
+        encrypted = encryption.encrypt("HELLO", 3)
+        decrypted = encryption.decrypt(encrypted, 3)
+        self.assertEqual(decrypted, "HELLO")
+
 if __name__ == '__main__':
     unittest.main()
