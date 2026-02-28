@@ -1,89 +1,108 @@
-import sys
 import os
 from encryption import Encryption
-
-def get_filename():
-    while True:
-        filename = input("Введите имя файла: ").strip()
-
-        if not filename:
-            print("Имя файла не может быть пустым")
-            continue
-            # Проверяем существование файла
-
-        if not os.path.exists(filename):
-            print(f"Файл '{filename}' не найден")
-            print("Введите другое название файла")
-            continue
-
-        return filename
-
-def get_shift():
-    while True:
-        try:
-            shift = input("Введите сдвиг: ").strip()
-            shift = int(shift)
-            return shift
-        except ValueError:
-            print("Сдвиг должен быть целым числом")
-
+from file_manager.manager import (
+    is_valid_directory,
+    get_filtered_files,
+    build_output_filename
+)
 
 def get_command():
     while True:
         print("1. Зашифровать файл")
         print("2. Расшифровать файл")
-        print("3. Выйти из программы")
-        command = input()
+        print("3. Выйти")
 
-        if command in ['1', 'encrypt']:
-            return 'encrypt'
-        elif command in ['2', 'decrypt']:
-            return 'decrypt'
-        elif command in ['3', 'exit', 'quit', 'q']:
-            return 'exit'
+        command = input("Выберите команду: ").strip()
+
+        if command in ["1", "encrypt"]:
+            return "encrypt"
+        elif command in ["2", "decrypt"]:
+            return "decrypt"
+        elif command in ["3", "exit", "quit", "q"]:
+            return "exit"
         else:
-            print("Неверная команда, попробуйте снова")
+            print("Неверная команда\n")
+
+
+def get_directory():
+    while True:
+        directory = input("Введите путь к папке (Без кавычек): ").strip()
+
+        if not is_valid_directory(directory):
+            print("Папка не существует\n")
+            continue
+
+        return directory
+
+
+def choose_file(files):
+    if not files:
+        print("Нет доступных файлов")
+        return None
+
+    print("\nДоступные файлы:")
+    for index, file in enumerate(files, 1):
+        print(f"{index}. {file}")
+
+    while True:
+        choice = input("Введите номер файла: ").strip()
+
+        try:
+            index = int(choice) - 1
+            if 0 <= index < len(files):
+                return files[index]
+            else:
+                print("Неверный номер")
+        except ValueError:
+            print("Введите число")
+
+
+def get_shift():
+    while True:
+        try:
+            return int(input("Введите сдвиг: ").strip())
+        except ValueError:
+            print("Сдвиг должен быть числом")
+
 
 def main():
-
-    print("ШИФРАТОР/ДЕШИФРАТОР ФАЙЛОВ")
-
-    encryption = Encryption()
-
-    input_file = get_filename()
+    print("ШИФРАТОР / ДЕШИФРАТОР")
 
     command = get_command()
-    if command == 'exit':
+    if command == "exit":
+        return
+
+    directory = get_directory()
+
+    files = get_filtered_files(directory, command)
+    filename = choose_file(files)
+
+    if not filename:
         return
 
     shift = get_shift()
 
-    print(f"Чтение файла: {input_file}")
-    content = encryption.read_file(input_file)
-    if content is None:
-        print("Входной файл пуст")
+    encryption = Encryption()
+
+    input_path = os.path.join(directory, filename)
+    content = encryption.read_file(input_path)
+
+    if not content:
+        print("Файл пуст или не удалось прочитать")
         return
 
-    if command == 'encrypt':
-        print("Шифруем файл...")
+    if command == "encrypt":
         result = encryption.encrypt(content, shift)
-        output_file = f"{input_file}.encrypted"
-
-    elif command == 'decrypt':
-        print("Расшифровка файла...")
+    else:
         result = encryption.decrypt(content, shift)
 
-        output_file = input_file.replace(".encrypted", ".decrypted")
-        if output_file == input_file:
-            output_file = f"{input_file}.decrypted"
-    else:
-        print(f"Неизвестная команда {command}")
-        return
+    output_path = build_output_filename(directory, filename, command)
 
-    if encryption.write_file(output_file, result):
-        print("Успешно")
+    if encryption.write_file(output_path, result):
+        print(f"Файл сохранён: {output_path}")
     else:
-        print("Не удалось сохранить результат")
+        print("Ошибка при сохранении файла")
+
 
 if __name__ == "__main__":
     main()
