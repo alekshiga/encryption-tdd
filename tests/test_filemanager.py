@@ -50,5 +50,22 @@ class TestFileManager(unittest.TestCase):
             with self.assertRaises(ValueError):
                 manager.decrypt_file(file_path)
 
+    # тест всего процесса
+    def test_full_cycle(self):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            file_path = Path(tmpdir) / "data.txt"
+            file_path.write_text("abc")
+
+            manager = FileManager(Encryption())
+            manager.encrypt_file(file_path)
+
+            encrypted_file = Path(tmpdir) / "data.txt.encrypted"
+            self.assertTrue(encrypted_file.exists())
+
+            manager.decrypt_file(encrypted_file)
+            decrypted_file = Path(tmpdir) / "data.txt"
+            content = decrypted_file.read_text()
+            self.assertEqual(content, "abc")
+
 if __name__ == "__main__":
     unittest.main()
