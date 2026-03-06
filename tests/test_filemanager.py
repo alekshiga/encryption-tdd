@@ -26,5 +26,18 @@ class TestFileManager(unittest.TestCase):
             result_file = Path(tmpdir) / "data.txt"
             self.assertTrue(result_file.exists())
 
+    # тест на корректного восстанавление файла
+    def test_decrypt_file_restores_content(self):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            encrypted_file = Path(tmpdir) / "data.txt.encrypted"
+            encrypted_file.write_text("bcd")
+
+            manager = FileManager(Encryption())
+            manager.decrypt_file(encrypted_file)
+
+            original_file = Path(tmpdir) / "data.txt"
+            content = original_file.read_text()
+            self.assertEqual(content, "abc")
+
 if __name__ == "__main__":
     unittest.main()
