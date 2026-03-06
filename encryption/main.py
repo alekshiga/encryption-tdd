@@ -21,7 +21,7 @@ def choose_action():
 
 def choose_folder():
     while True:
-        folder_path = input("Введите путь к папке: ").strip()
+        folder_path = input("Введите путь к папке (например C:\\Users\\...): ").strip()
         path = Path(folder_path)
         if path.is_dir():
             return path
