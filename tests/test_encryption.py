@@ -20,5 +20,11 @@ class TestEncryption(unittest.TestCase):
         result = encryption.encrypt("123")
         self.assertEqual(result, "234")
 
+    # тест выборочного сдвига
+    def test_shift_wrap_around(self):
+        encryption = Encryption(shift=3)
+        result = encryption.encrypt("xyzXYZ789")
+        self.assertEqual(result, "abcABC012")
+
 if __name__ == "__main__":
     unittest.main()
