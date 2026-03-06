@@ -9,3 +9,8 @@ class FileManager:
     def encrypt_file(self, path):
         new_file = str(path) + ".encrypted"
         Path(new_file).touch()
+
+    def decrypt_file(self, path):
+        path = Path(path)
+        original_file = path.parent / path.stem
+        original_file.write_text("")
