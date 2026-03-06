@@ -1,18 +1,17 @@
+# encryption/encryption.py
 class Encryption:
+    def __init__(self, shift=1):
+        self.shift = shift
 
     def encrypt(self, text):
         result = ""
         for c in text:
-            if 'a' <= c <= 'y' or 'A' <= c <= 'Y':
-                result += chr(ord(c) + 1)
-            elif c == 'z':
-                result += 'a'
-            elif c == 'Z':
-                result += 'A'
-            elif '0' <= c <= '8':
-                result += chr(ord(c) + 1)
-            elif c == '9':
-                result += '0'
+            if 'a' <= c <= 'z':
+                result += chr((ord(c) - ord('a') + self.shift) % 26 + ord('a'))
+            elif 'A' <= c <= 'Z':
+                result += chr((ord(c) - ord('A') + self.shift) % 26 + ord('A'))
+            elif '0' <= c <= '9':
+                result += chr((ord(c) - ord('0') + self.shift) % 10 + ord('0'))
             else:
                 result += c
         return result
@@ -20,16 +19,12 @@ class Encryption:
     def decrypt(self, text):
         result = ""
         for c in text:
-            if 'b' <= c <= 'z' or 'B' <= c <= 'Z':
-                result += chr(ord(c) - 1)
-            elif c == 'a':
-                result += 'z'
-            elif c == 'A':
-                result += 'Z'
-            elif '1' <= c <= '9':
-                result += chr(ord(c) - 1)
-            elif c == '0':
-                result += '9'
+            if 'a' <= c <= 'z':
+                result += chr((ord(c) - ord('a') - self.shift) % 26 + ord('a'))
+            elif 'A' <= c <= 'Z':
+                result += chr((ord(c) - ord('A') - self.shift) % 26 + ord('A'))
+            elif '0' <= c <= '9':
+                result += chr((ord(c) - ord('0') - self.shift) % 10 + ord('0'))
             else:
                 result += c
         return result
