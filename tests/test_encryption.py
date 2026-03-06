@@ -9,6 +9,10 @@ class TestEncryption(unittest.TestCase):
         result = encryption.encrypt("abc")
         self.assertEqual(result, "bcd")
 
+    def test_decrypt_shifts_letters_back(self):
+        encryption = Encryption()
+        result = encryption.decrypt("bcd")
+        self.assertEqual(result, "abc")
 
 if __name__ == "__main__":
     unittest.main()
