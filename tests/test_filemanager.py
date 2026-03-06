@@ -39,5 +39,16 @@ class TestFileManager(unittest.TestCase):
             content = original_file.read_text()
             self.assertEqual(content, "abc")
 
+    # дешифруются только .encrypted файлы
+    def test_decrypt_file_only_encrypted(self):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            file_path = Path(tmpdir) / "normal.txt"
+            file_path.write_text("abc")
+
+            manager = FileManager(Encryption())
+
+            with self.assertRaises(ValueError):
+                manager.decrypt_file(file_path)
+
 if __name__ == "__main__":
     unittest.main()
