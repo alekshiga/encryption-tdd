@@ -12,6 +12,8 @@ class FileManager:
 
     def decrypt_file(self, path):
         path = Path(path)
+        if path.suffix != ".encrypted":
+            raise ValueError("Файл должен иметь .encrypted расширение")
         encrypted_content = path.read_text()
         decrypted_content = self.encryption.decrypt(encrypted_content)
         original_file = path.parent / path.stem
