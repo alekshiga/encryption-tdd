@@ -12,5 +12,7 @@ class FileManager:
 
     def decrypt_file(self, path):
         path = Path(path)
+        encrypted_content = path.read_text()
+        decrypted_content = self.encryption.decrypt(encrypted_content)
         original_file = path.parent / path.stem
-        original_file.write_text("")
+        original_file.write_text(decrypted_content)
