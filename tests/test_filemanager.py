@@ -2,7 +2,7 @@ import unittest
 import tempfile
 from pathlib import Path
 
-from filemanager.file_manager import FileManager
+from filemanager.filemanager import FileManager
 from encryption.encryption import Encryption
 
 
